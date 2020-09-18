@@ -1,5 +1,5 @@
 # Install the app dependencies in a full Node docker image
-FROM node:12
+FROM node:12-alpine as builder
 
   
 WORKDIR "/app"
@@ -16,25 +16,22 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install --production
 
-# Copy the dependencies into a Slim Node docker image
-FROM node:10-slim
-  
-WORKDIR "/app"
+COPY . .
 
-# Install OS updates 
-RUN apt-get update \
- && apt-get dist-upgrade -y \
- && apt-get clean \
- && echo 'Finished installing dependencies'
+# Build the project and copy the files
+RUN npm run build
 
-# Install app dependencies
-COPY --from=0 /app/node_modules /app/node_modules
-COPY . /app
 
-ENV NODE_ENV production
-ENV PORT 3000
+FROM nginx:alpine
 
-USER node
+#!/bin/sh
 
-EXPOSE 3000
-CMD ["npm", "start"]
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
+
+## Remove default nginx index page
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy from the stahg 1
+COPY --from=builder /app/build /usr/share/nginx/html
+
+EXPOSE 3000 80
