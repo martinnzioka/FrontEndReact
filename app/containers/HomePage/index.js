@@ -60,10 +60,10 @@ export function HomePage({
   return (
     <article>
       <Helmet>
-        <title>Home Page</title>
+        <title>shorekeep</title>
         <meta
           name="description"
-          content="A React.js Boilerplate application homepage"
+          content="Welcome to shorekeep, your digital store attendant"
         />
       </Helmet>
       <div>
