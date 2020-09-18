@@ -5,9 +5,9 @@ FROM node:12-alpine as builder
 WORKDIR "/app"
 
 # Install OS updates 
-RUN apt-get update \
- && apt-get dist-upgrade -y \
- && apt-get clean \
+RUN apk update \
+ && apk upgrade -y \
+ && apk clean \
  && echo 'Finished installing dependencies'
 
 # Copy package.json and package-lock.json
