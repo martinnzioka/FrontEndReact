@@ -4,12 +4,6 @@ FROM node:12-alpine as builder
   
 WORKDIR "/app"
 
-# Install OS updates 
-RUN apk update \
- && apk upgrade -y \
- && apk clean \
- && echo 'Finished installing dependencies'
-
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
